@@ -1,15 +1,17 @@
 const mongoose = require('mongoose');
 
-let articleSchmea = mongoose.Schema({
+let articleSchema = mongoose.Schema({
     title: { type: String, require: true },
     content: { type: String, require: true },
     author: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     category: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Category' },
     tags: [{ type: mongoose.Schema.Types.ObjectId, required: true, ref:'Tag' }],
+    //добавено Поле за Коментари//
+    comments: [{type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Comment'}],
     date: { type: Date, default: Date.now() }
 });
 
-articleSchmea.method({
+articleSchema.method({
    prepareInsert: function () {
        let User = mongoose.model('User');
        User.findById(this.author).then(user => {
@@ -67,7 +69,8 @@ articleSchmea.method({
         this.save();
     }
 });
+articleSchema.set('versionKey', false);
 
-const Article = mongoose.model('Article', articleSchmea);
+const Article = mongoose.model('Article', articleSchema);
 
 module.exports = Article;

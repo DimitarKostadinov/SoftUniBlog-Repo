@@ -3,6 +3,8 @@ const homeController = require('./../controllers/home');
 const adminController = require('./../controllers/admin/admin')
 const articleController = require('./../controllers/article');
 const tagController = require('./../controllers/tag');
+const commentController = require('./../controllers/comment');
+
 
 module.exports = (app) => {
     app.get('/', homeController.index);
@@ -31,6 +33,8 @@ module.exports = (app) => {
 
     app.get('/article/delete/:id', articleController.deleteGet);
     app.post('/article/delete/:id', articleController.deletePost);
+//added comment
+    app.post('/article/comment/:id', commentController.commentPost);
 
     app.get('/tag/:name', tagController.listArticlesByTag);
 

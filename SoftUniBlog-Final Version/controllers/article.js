@@ -1,9 +1,10 @@
 
 const Article = require('mongoose').model('Article');
 const Category = require('mongoose').model('Category');
+const Comments=require('mongoose').model('Comment');
 const Tag = require('mongoose').model('Tag');
 const initializeTags = require('./../models/Tag').initializeTags;
-var fs = require("fs");
+
 
 
 module.exports = {
@@ -49,17 +50,22 @@ module.exports = {
     },
     details: (req, res) => {
         let id = req.params.id;
-        Article.findById(id).populate('author tags').then(article => {
-            if (!req.user) {
-                res.render('article/details', { article: article, isUserAuthorized: false});
-                return;
-            }
+        Article.findById(id).populate('author tags comments').then(article => {
+            //Добавени неща:  1.Populate(comments) 2.comments require 3.render: comments: comments //
+            let Comment=require('mongoose').model('Comment');
+            Comment.find({'about': id}).populate('author')
+                .then(comments => {
+                    if (!req.user) {
+                        res.render('article/details', {article: article, comments: comments, isUserAuthorized: false});
+                        return;
+                    }
 
-            req.user.isInRole('Admin').then(isAdmin => {
-                let isUserAuthorized = isAdmin || req.user.isAuthor(article);
+                    req.user.isInRole('Admin').then(isAdmin => {
+                        let isUserAuthorized = isAdmin || req.user.isAuthor(article);
 
-                res.render('article/details', { article: article, isUserAuthorized: isUserAuthorized});
-            });
+                        res.render('article/details', {article: article, comments:comments, isUserAuthorized: isUserAuthorized});
+                    });
+                })
         });
     },
     editGet: (req, res) => {

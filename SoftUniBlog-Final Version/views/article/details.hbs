@@ -30,5 +30,50 @@
                 </footer>
             </article>
         </div>
+
+        <!--Тази част е  формата за добавяне  на Коментарите-->
+
+        <div style="padding-left: 5px; margin-left: 5px;">
+                <div class="col-lg-6">
+                    {{#if user}}
+                        <div class="form-group">
+                            <form class="form-horizontal" id="comment" method="POST" action="/article/comment/{{article.id}}">
+                                <div class="col-sm-4 ">
+                                    <h3>Comment As:<div style="color: red;font-size: 20px;"> {{user.email}}</div></h3>
+                                    <input type="text" value="{{user.id}}" name="author" hidden>
+                                    <input type="text" value="{{article.id}}" name="about" hidden>
+                                    <textarea type="text" rows="5" class="form-control"  id="content" placeholder="Comment Here" name="content" style="min-width: 20em"></textarea>
+                                </div>
+                                    <button type="submit" class="myBtn">Post</button>
+                            </form>
+                        </div>
+                    {{/if}}
+                </div>
+
+            <!--//За РАБОТИ някакси //
+             Тази част е за показване на коментарите -->
+
+
+            {{#each comments}}
+                <div class="rightSide" >
+                    <h4 style="color:red;">Comment By: {{this.author.fullName}}</h4>
+                    <h5 class="btn btn-default-md text-success" data-toggle="collapse" data-target="#{{this.id}}">
+                        Show Comments
+                    </h5>
+                    <div id="{{this.id}}" class="collapse">
+                        <h5 data-toggle="collapse">
+                            <div style="background-color: white;font-size: 20px; color: red">{{this.content}}</div>
+                        </h5>
+                    </div>
+                    <h5 style="color: orange">{{this.date}}</h5>
+                </div>
+            {{/each}}
+        </div>
     </div>
 </div>
+
+
+
+
+
+
